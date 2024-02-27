@@ -1,0 +1,51 @@
+Here's the DDL code snippet for creating indexes and other objects without comments:
+
+```sql
+-- Create table
+CREATE TABLE employees (
+    id INT PRIMARY KEY,
+    name VARCHAR(50),
+    salary DECIMAL(10, 2)
+);
+
+-- Create unique index
+CREATE UNIQUE INDEX idx_id ON employees(id);
+
+-- Create non-unique index
+CREATE INDEX idx_name ON employees(name);
+
+-- Create view
+CREATE VIEW high_salary_employees AS
+SELECT id, name
+FROM employees
+WHERE salary > 50000;
+
+-- Create stored procedure
+DELIMITER //
+CREATE PROCEDURE get_employee_salary(IN employee_id INT)
+BEGIN
+    SELECT salary
+    FROM employees
+    WHERE id = employee_id;
+END //
+DELIMITER ;
+
+-- Create trigger
+CREATE TRIGGER update_salary_trigger
+AFTER UPDATE ON employees
+FOR EACH ROW
+BEGIN
+    IF NEW.salary > 100000 THEN
+        INSERT INTO audit_log(action, employee_id, salary)
+        VALUES ('Salary Updated', NEW.id, NEW.salary);
+    END IF;
+END;
+```
+
+In this code:
+
+- We first create a table named `employees` to store employee information.
+- Then, we create two indexes: one is a unique index (`idx_id`) to ensure the uniqueness of the `id` column, and the other is a non-unique index (`idx_name`) to speed up queries based on the `name` column.
+- Next, we create a view named `high_salary_employees` that filters out employees with salaries higher than 50000.
+- We then create a stored procedure named `get_employee_salary` to retrieve the salary of an employee based on their ID.
+- Finally, we create a trigger named `update_salary_trigger` that triggers after an update on the `employees` table. If the salary of an employee exceeds 100000, it inserts the update information into an audit log table.
